@@ -8,6 +8,7 @@ from rest_framework.permissions import (
     IsAuthenticated,
     IsAuthenticatedOrReadOnly,
 )
+from django_filters.rest_framework import DjangoFilterBackend
 
 from marketplace_app.api.serializer import (
     CategorySerializer,
@@ -21,6 +22,10 @@ from marketplace_app.api.permissions import (
     IsAdminOrReadOnlyPermission,
     IsAuthUserOrReadOnlyPermission,
 )
+from marketplace_app.api.pagination import (
+    ProductListPagination,
+    ProductListOffsetPagination
+)
 
 
 
@@ -29,6 +34,7 @@ class ProductListGenericView
 """
 class ProductListGenericView(generics.ListAPIView):
     serializer_class = ProductSerializer
+    pagination_class = ProductListOffsetPagination
     
     def get_queryset(self):
         pk = self.kwargs['pk']
@@ -71,6 +77,7 @@ def products_list(request):
     if request.method == 'GET':
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
+        pagination_class = ProductListPagination
         return Response(serializer.data)
             
 
