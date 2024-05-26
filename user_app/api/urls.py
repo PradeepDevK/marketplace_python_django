@@ -11,5 +11,6 @@ from user_app.api.views import (
 
 urlpatterns = [
     path('login/', TokenObtainPairView.as_view(), name='login'),
-    path('token/refresh/', TokenObtainPairView.as_view(), name='token_refresh'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('register/', registration_view, name='register'),
 ]

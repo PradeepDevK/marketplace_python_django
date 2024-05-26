@@ -4,15 +4,19 @@ from rest_framework.routers import DefaultRouter
 
 from marketplace_app.api.views import (
     CategoryViewSet,
-    ProductListAPIView,
-    ProductDetailAPIView,
+    ProductListGenericView,
+    ProductDetailGenericView,
+    ProductCreateGenericView,
+    products_list,
 )
 
 router = DefaultRouter()
-router.register('category', CategoryViewSet, basename='category')
+router.register('list', CategoryViewSet, basename='category')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('product/list/', ProductListAPIView.as_view(), name='product_list'),
-    path('product/<int:pk>/', ProductDetailAPIView.as_view(), name='product_detail'),
+    path('<int:pk>/product/', ProductListGenericView.as_view(), name='product_list'),
+    path('<int:pk>/product_create/', ProductCreateGenericView.as_view(), name='product_create'),
+    path('product/<int:pk>/', ProductDetailGenericView.as_view(), name='product_detail'),
+    path('products/', products_list, name='products'),
 ]

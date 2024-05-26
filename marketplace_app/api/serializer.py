@@ -9,10 +9,11 @@ from marketplace_app.models import (
 Product Serializer
 """
 class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.CharField(source='category.name')
+    product_user = serializers.StringRelatedField(read_only=True)
     class Meta:
         model = Product
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ('category',)
 
 
 """
