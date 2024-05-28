@@ -52,6 +52,25 @@ def upload_excel(request):
         try:
             df = pd.read_excel(file_path)
             
+            # Check for repeated emails in the uploaded Excel file
+            if df['email'].duplicated().any() or df['username'].duplicated().any():
+                default_storage.delete(file_name)
+                return JsonResponse({'error': 'Duplicate emails (or) usernames found in the uploaded file'}, status=400)
+            
+            # Check for emails that already exist in the database
+            existing_emails = User.objects.filter(email__in=df['email']).values_list('email', flat=True)
+            existing_usernames = User.objects.filter(username__in=df['username']).values_list('username', flat=True)
+            if existing_emails or existing_usernames:
+                error_message = ''
+                if existing_emails:
+                    error_message += f'These emails already exist in the database: {", ".join(existing_emails)}. '
+                if existing_usernames:
+                    error_message += f'These usernames already exist in the database: {", ".join(existing_usernames)}.'
+                
+                default_storage.delete(file_name)
+                return JsonResponse({'error': error_message.strip()}, status=400)
+            
+            
             for index, row in df.iterrows():
                 User.objects.create_user(
                     username=row['username'],
