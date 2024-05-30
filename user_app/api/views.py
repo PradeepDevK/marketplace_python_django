@@ -5,7 +5,9 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
 import pandas as pd
+import csv
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import default_storage
@@ -86,3 +88,23 @@ def upload_excel(request):
             return JsonResponse({'error': str(Exception)}, status=400)
         
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+@api_view(['GET'])
+def download_user_data(request):
+    # Filter out staff and superusers
+    users = User.objects.filter(is_staff=False, is_superuser=False)
+    
+    # Create the HttpResponse object with the appropriate CSV header
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="users.csv"'
+    
+    writer = csv.writer(response)
+    # write the header row
+    writer.writerow(['username', 'email'])
+    
+    # Write user data
+    for user in users:
+        writer.writerow([user.username, user.email])
+        
+    return response
+    

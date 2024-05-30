@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import (
 from user_app.api.views import (
     registration_view,
     upload_excel,
+    download_user_data
 )
 
 urlpatterns = [
@@ -15,4 +16,5 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', registration_view, name='register'),
     path('upload_excel/', upload_excel, name='upload_excel'),
+    path('download_users/', download_user_data, name='download_users'),
 ]
