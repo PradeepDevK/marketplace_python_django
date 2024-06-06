@@ -22,6 +22,7 @@ from marketplace_app.models import (
 from marketplace_app.api.permissions import (
     IsAdminOrReadOnlyPermission,
     IsAuthUserOrReadOnlyPermission,
+    IsAdminOrReadOnlyGroupPermission,
 )
 from marketplace_app.api.pagination import (
     ProductListPagination,
@@ -92,5 +93,6 @@ Viewsets for the categories
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAdminOrReadOnlyPermission]
+    # permission_classes = [IsAdminOrReadOnlyPermission]
+    permission_classes = [IsAdminOrReadOnlyGroupPermission]
     
