@@ -1,5 +1,7 @@
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from user_app.models import User
 from rest_framework import serializers
+from django.db import models
 
 
 """
@@ -10,7 +12,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'password2']
+        fields = ['username', 'role', 'email', 'password', 'password2',]
         extra_kwargs = {
             'password': { 'write_only': True }
         }
@@ -28,7 +30,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
         
         account = User(
             email=self.validated_data['email'],
-            username=self.validated_data['username']
+            username=self.validated_data['username'],
+            role=self.validated_data['role'],
         )
         account.set_password(self.validated_data['password'])
         account.save()

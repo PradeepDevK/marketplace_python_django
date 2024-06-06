@@ -33,6 +33,7 @@ def registration_view(request):
             data['response'] = 'Successfully registered a new user.'
             data['username'] = account.username
             data['email'] = account.email
+            data['role'] = account.role
             
             refresh = RefreshToken.for_user(account)
             data['token'] = {
@@ -77,7 +78,8 @@ def upload_excel(request):
                 User.objects.create_user(
                     username=row['username'],
                     password=row['password'],
-                    email=row['email']
+                    email=row['email'],
+                    role=row['role']
                 )
             # Delete the file after processing
             default_storage.delete(file_name)
