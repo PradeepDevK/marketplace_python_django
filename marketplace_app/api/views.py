@@ -10,6 +10,7 @@ from rest_framework.permissions import (
 )
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from rest_framework.exceptions import ValidationError, NotFound
 
 from marketplace_app.api.serializer import (
     CategorySerializer,
@@ -69,7 +70,10 @@ class ProductCreateGenericView(generics.CreateAPIView):
     
     def perform_create(self, serializer):
         pk = self.kwargs.get('pk')
-        category = Category.objects.get(pk=pk)
+        try :
+            category = Category.objects.get(pk=pk)
+        except Category.DoesNotExist:
+            raise NotFound("Category does not exist.")
         
         product_user = self.request.user
         
